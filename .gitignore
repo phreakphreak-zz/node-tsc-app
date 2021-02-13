@@ -1,8 +1,13 @@
 
-node_modules
+build
 
-package-lock.json
+node_modules/
+
 
 .env
 
 .vscode
+
+nodemon.json
+
+package-lock.json
