@@ -1,29 +1,48 @@
-import { Mongoose, ConnectOptions } from "mongoose";
-import {config} from '../../config';
+import mongoose, { Mongoose, ConnectOptions, Connection } from "mongoose";
+import { config } from "../../config";
 
-const URI: string =config.mongodb_uri;
 const connectOptions: ConnectOptions = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
 };
-const mongoose: Mongoose = new Mongoose();
+class Database {
+  connection: Connection;
+  constructor(
+    private mongoose: Mongoose,
+    private mongodb_uri: string,
+    private connectOptions: ConnectOptions
+  ) {
+    this.mongoose = mongoose;
+    this.connectOptions = connectOptions;
+    this.mongodb_uri = mongodb_uri;
+    this.connection = mongoose.createConnection(
+      this.mongodb_uri,
+      this.connectOptions
+    );
+  }
 
-mongoose.connect(URI, connectOptions).catch((error) => {
-  console.log("catch");
-  console.error(error);
-});
+  openConnection(): Promise<void | Error> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await mongoose.connect(this.mongodb_uri, this.connectOptions);
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
 
-mongoose.connection.on("connected", function () {
-  console.log(`Database connection open to ${URI}`);
-});
+  public get getUri(): string {
+    return this.mongodb_uri;
+  }
 
-mongoose.connection.on("error", function (error: Error) {
-  console.log(`Database connection error: ${error}`);
-});
+  public get getConnection(): Connection {
+    return this.connection;
+  }
+}
 
-mongoose.connection.on("disconnected", function () {
-  console.log("Database connection disconnected");
-});
-
-
-export default mongoose;
+export const database = new Database(
+  mongoose,
+  config.mongodb_uri,
+  connectOptions
+);
