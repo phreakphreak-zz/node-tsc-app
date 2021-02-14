@@ -8,7 +8,7 @@ const main = async (): Promise<void> => {
   try {
     await database.openConnection();
     await app.listen(app.get("port"));
-    console.log(`server running on  http://localhost:${app.get("port")}`);
+    console.log(`server running on  ${app.get("host")}:${app.get("port")}`);
   } catch (error) {
     console.error(`connection error: ${error}`);
     process.exit(0);
