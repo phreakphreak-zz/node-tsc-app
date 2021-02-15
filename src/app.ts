@@ -1,7 +1,7 @@
 import express from "express";
 import exphbs from "express-handlebars";
-import middlewares from "./middlewares/index";
-import routes from "./routes/index";
+import middlewares from "./middlewares";
+import routes from "./routes";
 import { config } from "./config";
 import path from "path";
 
