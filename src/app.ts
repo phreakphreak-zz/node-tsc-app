@@ -4,6 +4,7 @@ import middlewares from "./middlewares";
 import routes from "./routes";
 import { config } from "./config";
 import path from "path";
+import favicon from "serve-favicon";
 
 const app = express();
 
@@ -23,13 +24,20 @@ app.engine(
 );
 app.set("view engine", ".hbs");
 
+
+
 //* Middlewares
 app.use(middlewares);
 
 //* Routes
 app.use(routes);
 
+
 //* Static files
 app.use(express.static(path.join(__dirname, "public")));
+
+//* Serve Favicon
+
+app.use(favicon(path.join(__dirname, "public","favicon.ico")));
 
 export default app;
